@@ -52,7 +52,7 @@ public class App {
     public static void setShipsOnBoard(int[][] player){
         Random rand = new Random();
         int cont=0;
-        while (cont < maxShip){
+        while (cont < ship){
             int posX = rand.nextInt(height);
             int posY = rand.nextInt(width);
             if (player[posX][posY] != 1){
@@ -61,6 +61,47 @@ public class App {
             }
         }
     }
+
+    public static void showPlayerBoard (int[][] Player){
+        System.out.println("\n\n\n\n\nSeu tabuleiro\n\n");
+        System.out.printf("    ");
+        for (int i = 65; i < width + 65; i++) {
+            System.out.printf("%c   ", (char)i);
+        }
+        System.out.println("\n");
+        for (int i = 0; i < height; i++) {
+            System.out.printf("%d ", i+1);
+            for (int j = 0; j < width; j++) {
+                if(Player[i][j] == 1)
+                    System.out.printf("| N ");
+                if(Player[i][j] == 0)
+                    System.out.printf("|   ");
+            }
+            System.out.println("|");
+            System.out.println("\n");
+        }
+    }
+
+    public static void showEnemyBoard (int[][] Player){
+        System.out.println("\n\n\n\n\nTabuleiro inimigo\n\n");
+        System.out.printf("    ");
+        for (int i = 65; i < width + 65; i++) {
+            System.out.printf("%c   ", (char)i);
+        }
+        System.out.println("\n");
+        for (int i = 0; i < height; i++) {
+            System.out.printf("%d ", i+1);
+            for (int j = 0; j < width; j++) {
+                if(Player[i][j] == 1)
+                    System.out.printf("| N ");
+                if(Player[i][j] == 0)
+                    System.out.printf("|   ");
+            }
+            System.out.println("|");
+            System.out.println("\n");
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         boardSet();
         boardSize();
@@ -68,20 +109,8 @@ public class App {
         numberOfShips();
         setShipsOnBoard(boardPlayer1);
         setShipsOnBoard(boardPlayer2);
-        System.out.println("\n\n Player 1\n\n");
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                System.out.printf("%d", boardPlayer1[i][j]);
-            }
-            System.out.println("\n");
-        }
-        System.out.println("\n\nPlayer 2 \n\n");
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                System.out.printf("%d", boardPlayer2[i][j]);
-            }
-            System.out.println("\n");
-        }
+        showPlayerBoard(boardPlayer1);
+        showEnemyBoard(boardPlayer2);
         scanner.close();
     }
 }
