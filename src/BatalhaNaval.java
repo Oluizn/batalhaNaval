@@ -2,13 +2,13 @@ import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
-public class App {
+public class BatalhaNaval {
     static Scanner scanner = new Scanner(System.in);
     static int height, width;
     static int boardPlayer1[][], boardPlayer2[][];
     static int ship, maxShip;
 
-    public static void boardSet (){
+    public void boardSet (){
         boolean allSet = false;
         while(!allSet){
             try{
@@ -27,7 +27,7 @@ public class App {
         }
     }
 
-    public static void boardSize (){
+    public void boardSize (){
         boardPlayer1 = new int[height][width];
         boardPlayer2 = new int[height][width];
         for (int i = 0; i < height; i++) {
@@ -38,18 +38,18 @@ public class App {
         }
     }
 
-    public static void maxShipOnBoard(){
+    public void maxShipOnBoard(){
         maxShip = (height * width)/3;
     }
 
-    public static void numberOfShips(){
+    public void numberOfShips(){
         System.out.println("\nInforme a quantidade de navios de 1 a " + maxShip);
         ship = scanner.nextInt();
         if (ship > maxShip)
             ship = maxShip;
     }
     
-    public static void setShipsOnBoard(int[][] player){
+    public void setShipsOnBoard(int[][] player){
         Random rand = new Random();
         int cont=0;
         while (cont < ship){
@@ -62,7 +62,32 @@ public class App {
         }
     }
 
-    public static void showPlayerBoard (int[][] Player){
+    public void playerShot(int[][] Player){
+        System.out.println("Digite a posição do seu tiro");
+        char tiro;
+        int positionY, ascii, positionX;
+        String shot = scanner.next();
+        int heightQuantity = (height > 10) ? 2 : 1;
+        String verifyingExpression = "^[A-Za-z]{1}[0-9]{" + heightQuantity + "}$";
+        if(shot.matches(verifyingExpression)){
+            tiro = shot.toUpperCase().charAt(0);
+            positionY = Integer.parseInt(shot.substring(1)) - 1;
+            positionX = (int)tiro - 65;
+            if(positionX < width && positionY < height){
+                if(Player[positionY][positionX] == 1){
+                    Player[positionY][positionX] = 2;
+                }if(Player[positionY][positionX] == 0){
+                    Player[positionY][positionX] = 3;
+                }
+            } else{
+                System.out.println("Tiro fora do tabuleiro!!");
+            }
+        } else{
+            System.out.println("ERRO");
+        }
+    }
+
+    public void showPlayerBoard (int[][] Player){
         System.out.println("\n\n\n\n\nSeu tabuleiro\n\n");
         System.out.printf("    ");
         for (int i = 65; i < width + 65; i++) {
@@ -70,8 +95,15 @@ public class App {
         }
         System.out.println("\n");
         for (int i = 0; i < height; i++) {
-            System.out.printf("%d ", i+1);
+            if(i<9)
+                System.out.printf("%d ", i+1);
+            else
+                System.out.printf("%d", i+1);
             for (int j = 0; j < width; j++) {
+                if(Player[i][j] == 3)
+                    System.out.printf("| X ");
+                if(Player[i][j] == 2)
+                    System.out.printf("| D ");
                 if(Player[i][j] == 1)
                     System.out.printf("| N ");
                 if(Player[i][j] == 0)
@@ -82,8 +114,8 @@ public class App {
         }
     }
 
-    public static void showEnemyBoard (int[][] Player){
-        System.out.println("\n\n\n\n\nTabuleiro inimigo\n\n");
+    public void showEnemyBoard (int[][] Player){
+        System.out.println("\nTabuleiro inimigo\n");
         System.out.printf("    ");
         for (int i = 65; i < width + 65; i++) {
             System.out.printf("%c   ", (char)i);
@@ -92,8 +124,12 @@ public class App {
         for (int i = 0; i < height; i++) {
             System.out.printf("%d ", i+1);
             for (int j = 0; j < width; j++) {
+                if(Player[i][j] == 3)
+                    System.out.printf("| X ");
+                if(Player[i][j] == 2)
+                    System.out.printf("| D ");
                 if(Player[i][j] == 1)
-                    System.out.printf("| N ");
+                    System.out.printf("|   ");
                 if(Player[i][j] == 0)
                     System.out.printf("|   ");
             }
@@ -103,14 +139,17 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        boardSet();
-        boardSize();
-        maxShipOnBoard();
-        numberOfShips();
-        setShipsOnBoard(boardPlayer1);
-        setShipsOnBoard(boardPlayer2);
-        showPlayerBoard(boardPlayer1);
-        showEnemyBoard(boardPlayer2);
+        BatalhaNaval partida = new BatalhaNaval();
+        partida.boardSet();
+        partida.boardSize();
+        partida.maxShipOnBoard();
+        partida.numberOfShips();
+        partida.setShipsOnBoard(boardPlayer1);
+        partida.setShipsOnBoard(boardPlayer2);
+        //partida.showPlayerBoard(boardPlayer1);
+        partida.showEnemyBoard(boardPlayer2);
+        partida.playerShot(boardPlayer2);
+        partida.showEnemyBoard(boardPlayer2);
         scanner.close();
     }
 }
