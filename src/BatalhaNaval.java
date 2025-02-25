@@ -8,6 +8,8 @@ public class BatalhaNaval {
     static int boardPlayer1[][], boardPlayer2[][];
     static int ship, maxShip;
 
+
+    //usuario define o tamanho do tabuleiro
     public void boardSet (){
         boolean allSet = false;
         while(!allSet){
@@ -27,6 +29,7 @@ public class BatalhaNaval {
         }
     }
 
+    // metodo para criar matriz para tabuleiro
     public void boardSize (){
         boardPlayer1 = new int[height][width];
         boardPlayer2 = new int[height][width];
@@ -38,10 +41,12 @@ public class BatalhaNaval {
         }
     }
 
+    // metodo para definir quantidade máxima de navios de acordo com tamanho do tabuleiro
     public void maxShipOnBoard(){
         maxShip = (height * width)/3;
     }
 
+    // metodo para definir quantidade de navios da partida
     public void numberOfShips(){
         System.out.println("\nInforme a quantidade de navios de 1 a " + maxShip);
         ship = scanner.nextInt();
@@ -49,6 +54,7 @@ public class BatalhaNaval {
             ship = maxShip;
     }
     
+    // metodo para posicionar navios aleatoriamente no tabuleiro
     public void setShipsOnBoard(int[][] player){
         Random rand = new Random();
         int cont=0;
@@ -62,22 +68,38 @@ public class BatalhaNaval {
         }
     }
 
-    public void playerShot(int[][] Player){
+    // metodo para capturar posição do tiro do player:
+    public static String inputPlayerShot(){
         System.out.println("Digite a posição do seu tiro");
-        char tiro;
-        int positionY, ascii, positionX;
-        String shot = scanner.next();
+        return scanner.next();
+    }
+
+    // metodoo para validar se o tiro do jogador está dentro dos caracteres aceitos
+    public static boolean verify(String shot){
         int heightQuantity = (height > 10) ? 2 : 1;
         String verifyingExpression = "^[A-Za-z]{1}[0-9]{" + heightQuantity + "}$";
-        if(shot.matches(verifyingExpression)){
-            tiro = shot.toUpperCase().charAt(0);
-            positionY = Integer.parseInt(shot.substring(1)) - 1;
-            positionX = (int)tiro - 65;
-            if(positionX < width && positionY < height){
-                if(Player[positionY][positionX] == 1){
-                    Player[positionY][positionX] = 2;
-                }if(Player[positionY][positionX] == 0){
-                    Player[positionY][positionX] = 3;
+        return shot.matches(verifyingExpression);
+    }
+
+    // metodo para transformar o tiro do jogador em dois números inteiros
+    public static int[] getPosition(String shot){
+        char tiro = shot.toUpperCase().charAt(0);
+        int position[] = new int[2];
+        position[0] = Integer.parseInt(shot.substring(1)) - 1;
+        position[1] = (int)tiro - 65;
+        return position;
+    }
+
+    // metodo para realizar o tiro do player
+    public void playerShot(int[][] Player){
+        String shot = inputPlayerShot();
+        int[] position = getPosition(shot);
+        if(verify(shot)){
+            if(position[0] < width && position[1] < height){
+                if(Player[position[0]][position[1]] == 1){
+                    Player[position[0]][position[1]] = 2;
+                }if(Player[position[0]][position[1]] == 0){
+                    Player[position[0]][position[1]] = 3;
                 }
             } else{
                 System.out.println("Tiro fora do tabuleiro!!");
@@ -87,8 +109,9 @@ public class BatalhaNaval {
         }
     }
 
-    public void showPlayerBoard (int[][] Player){
-        System.out.println("\n\n\n\n\nSeu tabuleiro\n\n");
+    // metodo para imprimir o tabuleiro do player
+    public void showPlayerBoard (int[][] Player, String playerName){
+        System.out.println(playerName);
         System.out.printf("    ");
         for (int i = 65; i < width + 65; i++) {
             System.out.printf("%c   ", (char)i);
@@ -114,6 +137,7 @@ public class BatalhaNaval {
         }
     }
 
+    // metodo para imprimir o tabuleiro do inimigo
     public void showEnemyBoard (int[][] Player){
         System.out.println("\nTabuleiro inimigo\n");
         System.out.printf("    ");
@@ -146,10 +170,13 @@ public class BatalhaNaval {
         partida.numberOfShips();
         partida.setShipsOnBoard(boardPlayer1);
         partida.setShipsOnBoard(boardPlayer2);
-        //partida.showPlayerBoard(boardPlayer1);
+        partida.showPlayerBoard(boardPlayer1, "Antonio");
         partida.showEnemyBoard(boardPlayer2);
-        partida.playerShot(boardPlayer2);
+        partida.playerShot(boardPlayer1);
+        partida.showPlayerBoard(boardPlayer1, "Antonio");
         partida.showEnemyBoard(boardPlayer2);
+
+        System.out.println("Digite a posição do seu tiro");
         scanner.close();
     }
 }
