@@ -74,13 +74,6 @@ public class BatalhaNaval {
         return scanner.next();
     }
 
-    // metodoo para validar se o tiro do jogador está dentro dos caracteres aceitos
-    public static boolean verify(String shot){
-        int heightQuantity = (height > 10) ? 2 : 1;
-        String verifyingExpression = "^[A-Za-z]{1}[0-9]{" + heightQuantity + "}$";
-        return shot.matches(verifyingExpression);
-    }
-
     // metodo para transformar o tiro do jogador em dois números inteiros
     public static int[] getPosition(String shot){
         char tiro = shot.toUpperCase().charAt(0);
@@ -88,6 +81,18 @@ public class BatalhaNaval {
         position[0] = Integer.parseInt(shot.substring(1)) - 1;
         position[1] = (int)tiro - 65;
         return position;
+    }
+
+    // metodoo para validar se o tiro do jogador está dentro dos caracteres aceitos
+    public static boolean verify(String shot){
+        int[] position = getPosition(shot);
+        int operator;
+        if(position[0] >= 9)
+            operator = 2;
+        else
+            operator = 1;
+        String verifyingExpression = "^[A-Za-z]{1}[0-9]{" + operator + "}$";
+        return shot.matches(verifyingExpression);
     }
 
     // metodo para realizar o tiro do player
@@ -137,6 +142,22 @@ public class BatalhaNaval {
         }
     }
 
+    public void enemyShot(int player[][]){
+        Random rand = new Random();
+        int posX = rand.nextInt(height);
+        int posY = rand.nextInt(width);
+        while(player[height][width] == 3 && player[height][width] == 2){
+            posX = rand.nextInt(height);
+            posY = rand.nextInt(width);
+        }
+        if(player[posX][posY] == 1){
+            player[posX][posY] = 2;
+        } else{
+            player[posX][posY] = 3;
+            System.out.println("Tiro errado!!");
+        }
+    }
+
     // metodo para imprimir o tabuleiro do inimigo
     public void showEnemyBoard (int[][] Player){
         System.out.println("\nTabuleiro inimigo\n");
@@ -146,7 +167,10 @@ public class BatalhaNaval {
         }
         System.out.println("\n");
         for (int i = 0; i < height; i++) {
-            System.out.printf("%d ", i+1);
+            if(i<9)
+                System.out.printf("%d ", i+1);
+            else
+                System.out.printf("%d", i+1);
             for (int j = 0; j < width; j++) {
                 if(Player[i][j] == 3)
                     System.out.printf("| X ");
@@ -172,11 +196,10 @@ public class BatalhaNaval {
         partida.setShipsOnBoard(boardPlayer2);
         partida.showPlayerBoard(boardPlayer1, "Antonio");
         partida.showEnemyBoard(boardPlayer2);
-        partida.playerShot(boardPlayer1);
-        partida.showPlayerBoard(boardPlayer1, "Antonio");
+        partida.playerShot(boardPlayer2);
         partida.showEnemyBoard(boardPlayer2);
-
-        System.out.println("Digite a posição do seu tiro");
+        partida.enemyShot(boardPlayer1);
+        partida.showPlayerBoard(boardPlayer1, "Antonio");
         scanner.close();
     }
 }
