@@ -182,18 +182,6 @@ public class BatalhaNaval {
         }
     }
 
-    public void loop(){
-        boolean allSet = false;
-        while(!allSet){
-            for (int i = 0; i < height; i++) {
-                for (int j = 0; j < width; j++) {
-                    if (boardPlayer1[height][width] != 1 || boardPlayer2[height][width] != 1)
-                }
-                
-            }
-        }
-    }
-
     public static void main(String[] args) throws Exception {
         BatalhaNaval partida = new BatalhaNaval();
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n********************************************************************");
