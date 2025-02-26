@@ -7,25 +7,26 @@ public class BatalhaNaval {
     static int height, width;
     static int boardPlayer1[][], boardPlayer2[][];
     static int ship, maxShip;
+    static String playerName;
 
 
     //usuario define o tamanho do tabuleiro
     public void boardSet (){
-        boolean allSet = false;
-        while(!allSet){
-            try{
-                System.out.println("Digite a altura do tabuleiro (min 3)");
-                height = scanner.nextInt();
-                System.out.println("Digite a largura do tabuleiro (min 3)");
-                width = scanner.nextInt();
-                if (height >= 3 && width >= 3)
-                    allSet = true;
-                else
-                    System.out.println("\nInforme uma altura e largura mínima de 3 casas!!\n");
-                
-            } catch(InputMismatchException erro){
-                System.out.println("\n\nDigite um valor numérico\n\n");
-            }
+        System.out.println("Informe o nome do jogador");
+        playerName = scanner.nextLine();
+        try{
+            System.out.println("Digite a altura do tabuleiro (min 3)");
+            height = scanner.nextInt();
+            System.out.println("Digite a largura do tabuleiro (min 3)");
+            width = scanner.nextInt();
+            if (height < 3 || width < 3){
+                System.out.println("\nInforme uma altura e largura mínima de 3 casas!!\n");
+                boardSet();
+            }                
+        } catch(InputMismatchException erro){
+            scanner.nextLine();
+            System.out.println("\n\nDigite um valor numérico\n\n");
+            boardSet();
         }
     }
 
@@ -48,10 +49,21 @@ public class BatalhaNaval {
 
     // metodo para definir quantidade de navios da partida
     public void numberOfShips(){
-        System.out.println("\nInforme a quantidade de navios de 1 a " + maxShip);
-        ship = scanner.nextInt();
-        if (ship > maxShip)
-            ship = maxShip;
+        try {
+            System.out.println("\nInforme a quantidade de navios de 1 a " + maxShip);
+            ship = scanner.nextInt();
+            if(ship < 1){
+                System.out.println("Informe um número maior que 0!!");
+                numberOfShips();
+            }
+            if(ship > maxShip)
+                ship = maxShip;
+        } catch (InputMismatchException erro) {
+            scanner.nextLine();
+            System.out.println("\n\nDigite um valor numérico\n\n");
+            numberOfShips();
+        }
+        
     }
     
     // metodo para posicionar navios aleatoriamente no tabuleiro
@@ -116,7 +128,7 @@ public class BatalhaNaval {
 
     // metodo para imprimir o tabuleiro do player
     public void showPlayerBoard (int[][] Player, String playerName){
-        System.out.println(playerName);
+        System.out.println("\n" + playerName + "\n");
         System.out.printf("    ");
         for (int i = 65; i < width + 65; i++) {
             System.out.printf("%c   ", (char)i);
@@ -182,8 +194,7 @@ public class BatalhaNaval {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        BatalhaNaval partida = new BatalhaNaval();
+    public void menu(){
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n********************************************************************");
         System.out.println("*                    BEM-VINDO AO BATALHA NAVAL                    *");
         System.out.println("********************************************************************");
@@ -208,12 +219,29 @@ public class BatalhaNaval {
         System.out.println("- O primeiro a afundar todos os navios do adversário vence!");
         System.out.println();
         System.out.println("Boa sorte, comandante! Que vença o melhor estrategista!");
+    }
+
+    public void loop(int player[][]){
+        playerShot(player);
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if(boardPlayer1[height][width] == 1)
+                    loop(player);                
+            }
+        }
+    }
+    
+    public static void main(String[] args) throws Exception {
+        BatalhaNaval partida = new BatalhaNaval();
+        partida.menu();
         partida.boardSet();
         partida.maxShipOnBoard();
         partida.boardSize();
         partida.numberOfShips();
         partida.setShipsOnBoard(boardPlayer1);
         partida.setShipsOnBoard(boardPlayer2);
+        partida.showPlayerBoard(boardPlayer1, playerName);
+        partida.showEnemyBoard(boardPlayer2);
         scanner.close();
     }
 }
