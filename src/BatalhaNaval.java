@@ -146,16 +146,12 @@ public class BatalhaNaval {
         Random rand = new Random();
         int posX = rand.nextInt(height);
         int posY = rand.nextInt(width);
-        while(player[height][width] == 3 && player[height][width] == 2){
-            posX = rand.nextInt(height);
-            posY = rand.nextInt(width);
-        }
-        if(player[posX][posY] == 1){
+        if(player[posX][posY] == 3 && player[posX][posY] == 2)
+            enemyShot(player);
+        else if (player[posX][posY] == 1)
             player[posX][posY] = 2;
-        } else{
+        else
             player[posX][posY] = 3;
-            System.out.println("Tiro errado!!");
-        }
     }
 
     // metodo para imprimir o tabuleiro do inimigo
@@ -186,20 +182,50 @@ public class BatalhaNaval {
         }
     }
 
+    public void loop(){
+        boolean allSet = false;
+        while(!allSet){
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (boardPlayer1[height][width] != 1 || boardPlayer2[height][width] != 1)
+                }
+                
+            }
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         BatalhaNaval partida = new BatalhaNaval();
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n********************************************************************");
+        System.out.println("*                    BEM-VINDO AO BATALHA NAVAL                    *");
+        System.out.println("********************************************************************");
+        System.out.println();
+        System.out.println("           |      |                          |      |    ");
+        System.out.println("          )_)    )_)                        )_)    )_)   ");
+        System.out.println("         )___)  )___)                      )___)  )___)  ");
+        System.out.println("        )____) )_____)                    )____) )_____) ");
+        System.out.println("-----\\_________________/---------------\\_________________/----------");
+        System.out.println("~~~~~~\\_______________/~~~~~~~~~~~~~~~~~\\_______________/~~~~~~~~~~~");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("\nPrepare-se para uma emocionante batalha no mar!");
+        System.out.println("Seus navios e o do oponente serão posicionados de forma aleatória no tabuleiro");
+        System.out.println("e você deverá tentar afundar os navios inimigos antes que os seus sejam destruídos.");
+        System.out.println("Você deverá escolher a quantidade de navios no tabuleiro, e essa quantidade de navios será sempre 1 terço do tamanho total do tabuleiro");
+        System.out.println("e essa quantidade de navios será sempre 1 terço do tamanho total do tabuleiro\n");
+        System.out.println("Regras básicas:");
+        System.out.println("- Os jogadores possuem a mesma quantidade de navios");
+        System.out.println("- Os navios são posicionados de forma aleatória pelo sistema.");
+        System.out.println("- O tabuleiro deverá ter uma tamanho mínimo de 3x3, e possuir um tamanho máximo de 1 terço da quantidade de casas no tabuleiro.");
+        System.out.println("- Os jogadores se revezam tentando acertar as coordenadas dos navios inimigos.");
+        System.out.println("- O primeiro a afundar todos os navios do adversário vence!");
+        System.out.println();
+        System.out.println("Boa sorte, comandante! Que vença o melhor estrategista!");
         partida.boardSet();
-        partida.boardSize();
         partida.maxShipOnBoard();
+        partida.boardSize();
         partida.numberOfShips();
         partida.setShipsOnBoard(boardPlayer1);
         partida.setShipsOnBoard(boardPlayer2);
-        partida.showPlayerBoard(boardPlayer1, "Antonio");
-        partida.showEnemyBoard(boardPlayer2);
-        partida.playerShot(boardPlayer2);
-        partida.showEnemyBoard(boardPlayer2);
-        partida.enemyShot(boardPlayer1);
-        partida.showPlayerBoard(boardPlayer1, "Antonio");
         scanner.close();
     }
 }
