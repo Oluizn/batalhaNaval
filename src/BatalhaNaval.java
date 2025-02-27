@@ -126,6 +126,39 @@ public class BatalhaNaval {
         }
     }
 
+    public void enemyShot(int player[][]){
+        Random rand = new Random();
+        int posX = rand.nextInt(height);
+        int posY = rand.nextInt(width);
+        if(player[posX][posY] == 3 && player[posX][posY] == 2)
+            enemyShot(player);
+        else if (player[posX][posY] == 1)
+            player[posX][posY] = 2;
+        else
+            player[posX][posY] = 3;
+    }
+
+    public boolean endGame(int[][] player){
+        boolean game = true;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if(player[j][i] == 1){
+                    game = false;
+                    break;
+                }
+            }
+        }
+        return game;
+    }
+
+    public void loop(){
+        showBothBoard();
+        playerShot(boardPlayer2);
+        enemyShot(boardPlayer1);
+        while(!endGame(boardPlayer1) || !endGame(boardPlayer2))
+            loop();
+    }
+    
     // metodo para imprimir o tabuleiro do player
     public void showPlayerBoard (int[][] Player, String playerName){
         System.out.println("\n" + playerName + "\n");
@@ -154,17 +187,6 @@ public class BatalhaNaval {
         }
     }
 
-    public void enemyShot(int player[][]){
-        Random rand = new Random();
-        int posX = rand.nextInt(height);
-        int posY = rand.nextInt(width);
-        if(player[posX][posY] == 3 && player[posX][posY] == 2)
-            enemyShot(player);
-        else if (player[posX][posY] == 1)
-            player[posX][posY] = 2;
-        else
-            player[posX][posY] = 3;
-    }
 
     // metodo para imprimir o tabuleiro do inimigo
     public void showEnemyBoard (int[][] Player){
@@ -185,13 +207,18 @@ public class BatalhaNaval {
                 if(Player[i][j] == 2)
                     System.out.printf("| D ");
                 if(Player[i][j] == 1)
-                    System.out.printf("|   ");
+                    System.out.printf("| N ");
                 if(Player[i][j] == 0)
                     System.out.printf("|   ");
             }
             System.out.println("|");
             System.out.println("\n");
         }
+    }
+
+    public void showBothBoard(){
+        showPlayerBoard(boardPlayer1, playerName);
+        showEnemyBoard(boardPlayer2);
     }
 
     public void menu(){
@@ -220,16 +247,6 @@ public class BatalhaNaval {
         System.out.println();
         System.out.println("Boa sorte, comandante! Que vença o melhor estrategista!");
     }
-
-    public void loop(int player[][]){
-        playerShot(player);
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if(boardPlayer1[height][width] == 1)
-                    loop(player);                
-            }
-        }
-    }
     
     public static void main(String[] args) throws Exception {
         BatalhaNaval partida = new BatalhaNaval();
@@ -240,8 +257,7 @@ public class BatalhaNaval {
         partida.numberOfShips();
         partida.setShipsOnBoard(boardPlayer1);
         partida.setShipsOnBoard(boardPlayer2);
-        partida.showPlayerBoard(boardPlayer1, playerName);
-        partida.showEnemyBoard(boardPlayer2);
+        partida.loop();
         scanner.close();
     }
 }
