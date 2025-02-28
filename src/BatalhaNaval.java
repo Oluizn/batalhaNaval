@@ -294,7 +294,7 @@ public class BatalhaNaval {
                 if(Player[i][j] == 2)
                     System.out.printf("| D ");
                 if(Player[i][j] == 1)
-                    System.out.printf("| N ");
+                    System.out.printf("|   ");
                 if(Player[i][j] == 0)
                     System.out.printf("|   ");
             }
@@ -328,7 +328,8 @@ public class BatalhaNaval {
         System.out.println("Regras básicas:");
         System.out.println("- Os jogadores possuem a mesma quantidade de navios");
         System.out.println("- Os navios são posicionados de forma aleatória pelo sistema.");
-        System.out.println("- O tabuleiro deverá ter uma tamanho mínimo de 3x3, e possuir um tamanho máximo de 1 terço da quantidade de casas no tabuleiro.");
+        System.out.println("- O tabuleiro deverá ter uma tamanho mínimo de 3x3");
+        System.out.println("- A quantidade máxima de navios deverá ser menor ou igual a 1 terço da quantidade de casas no tabuleiro");
         System.out.println("- Os jogadores se revezam tentando acertar as coordenadas dos navios inimigos.");
         System.out.println("- O primeiro a afundar todos os navios do adversário vence!");
         System.out.println();
