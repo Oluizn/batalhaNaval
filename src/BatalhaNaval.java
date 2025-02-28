@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class BatalhaNaval {
     static Scanner scanner = new Scanner(System.in);
-    static int height, width;
+    static int height, width, hitCount = 0, hitTakenCount = 0;;
     static int boardPlayer1[][], boardPlayer2[][];
     static int ship, maxShip;
     static String playerName;
@@ -86,55 +86,6 @@ public class BatalhaNaval {
         return scanner.next();
     }
 
-    public static void posicionarNavio(int[][] board, int tamanhoNavio, Random random) {
-        int linhas = board.length;
-        int colunas = board[0].length;
-        boolean posicionado = false;
-
-        while (!posicionado) {
-            int linha = random.nextInt(linhas);
-            int coluna = random.nextInt(colunas);
-            boolean horizontal = random.nextBoolean();
-
-            if (podePosicionar(board, linha, coluna, tamanhoNavio, horizontal)) {
-                for (int i = 0; i < tamanhoNavio; i++) {
-                    if (horizontal) {
-                        board[linha][coluna + i] = 1;
-                    } else {
-                        board[linha + i][coluna] = 1;
-                    }
-                }
-                posicionado = true;
-            }
-        }
-    }
-
-    private static boolean podePosicionar(int[][] board, int linha, int coluna, int tamanho, boolean horizontal) {
-        int linhas = board.length;
-        int colunas = board[0].length;
-
-        if (horizontal) {
-            if (coluna + tamanho > colunas) return false; // Fora dos limites
-            for (int i = 0; i < tamanho; i++) {
-                if (board[linha][coluna + i] != 0) return false; // Verifica sobreposição
-            }
-        } else {
-            if (linha + tamanho > linhas) return false; // Fora dos limites
-            for (int i = 0; i < tamanho; i++) {
-                if (board[linha + i][coluna] != 0) return false; // Verifica sobreposição
-            }
-        }
-        return true;
-    }
-
-    public static void imprimirTabuleiro(int[][] board) {
-        for (int[] linha : board) {
-            for (int celula : linha) {
-                System.out.print(celula + " ");
-            }
-            System.out.println();
-        }
-    }
 
     // metodo para transformar o tiro do jogador em dois números inteiros
     public static int[] getPosition(String shot){
@@ -166,6 +117,8 @@ public class BatalhaNaval {
                 if(Player[position[0]][position[1]] == 1){
                     Player[position[0]][position[1]] = 2;
                     System.out.println("\n\n\n\n\nNavio destruido!!!");
+                    hitCount++;
+
                 }if(Player[position[0]][position[1]] == 0){
                     Player[position[0]][position[1]] = 3;
                     System.out.println("\n\n\n\n\nErrrooouuuuu :(");
@@ -188,8 +141,10 @@ public class BatalhaNaval {
             enemyShot(player);
         if(player[posX][posY] == 0)
             player[posX][posY] = 3;
-        if(player[posX][posY] == 1)
+        if(player[posX][posY] == 1){
             player[posX][posY] = 2;
+            hitTakenCount++;
+        }
         
     }
 
@@ -248,6 +203,9 @@ public class BatalhaNaval {
     
     // metodo para imprimir o tabuleiro do player
     public void showPlayerBoard (int[][] Player, String playerName){
+        System.out.println("\nLegenda:");
+        System.out.println("- D -> Navio destruido");
+        System.out.println("- X -> Tiro errado");
         System.out.println("\n" + playerName + "\n");
         System.out.printf("    ");
         for (int i = 65; i < width + 65; i++) {
@@ -272,6 +230,7 @@ public class BatalhaNaval {
             System.out.println("|");
             System.out.println("\n");
         }
+        System.out.println("Total de navios destruidos: " + hitTakenCount + "\n");
     }
 
 
@@ -301,6 +260,7 @@ public class BatalhaNaval {
             System.out.println("|");
             System.out.println("\n");
         }
+        System.out.println("Total de navios destruido: " + hitCount + "\n");
     }
 
     public void showBothBoard(){
