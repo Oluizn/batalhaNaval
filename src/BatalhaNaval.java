@@ -86,6 +86,56 @@ public class BatalhaNaval {
         return scanner.next();
     }
 
+    public static void posicionarNavio(int[][] board, int tamanhoNavio, Random random) {
+        int linhas = board.length;
+        int colunas = board[0].length;
+        boolean posicionado = false;
+
+        while (!posicionado) {
+            int linha = random.nextInt(linhas);
+            int coluna = random.nextInt(colunas);
+            boolean horizontal = random.nextBoolean();
+
+            if (podePosicionar(board, linha, coluna, tamanhoNavio, horizontal)) {
+                for (int i = 0; i < tamanhoNavio; i++) {
+                    if (horizontal) {
+                        board[linha][coluna + i] = 1;
+                    } else {
+                        board[linha + i][coluna] = 1;
+                    }
+                }
+                posicionado = true;
+            }
+        }
+    }
+
+    private static boolean podePosicionar(int[][] board, int linha, int coluna, int tamanho, boolean horizontal) {
+        int linhas = board.length;
+        int colunas = board[0].length;
+
+        if (horizontal) {
+            if (coluna + tamanho > colunas) return false; // Fora dos limites
+            for (int i = 0; i < tamanho; i++) {
+                if (board[linha][coluna + i] != 0) return false; // Verifica sobreposição
+            }
+        } else {
+            if (linha + tamanho > linhas) return false; // Fora dos limites
+            for (int i = 0; i < tamanho; i++) {
+                if (board[linha + i][coluna] != 0) return false; // Verifica sobreposição
+            }
+        }
+        return true;
+    }
+
+    public static void imprimirTabuleiro(int[][] board) {
+        for (int[] linha : board) {
+            for (int celula : linha) {
+                System.out.print(celula + " ");
+            }
+            System.out.println();
+        }
+    }
+
     // metodo para transformar o tiro do jogador em dois números inteiros
     public static int[] getPosition(String shot){
         char tiro = shot.toUpperCase().charAt(0);
@@ -115,8 +165,10 @@ public class BatalhaNaval {
             if(position[0] < width && position[1] < height){
                 if(Player[position[0]][position[1]] == 1){
                     Player[position[0]][position[1]] = 2;
+                    System.out.println("\n\n\n\n\nNavio destruido!!!");
                 }if(Player[position[0]][position[1]] == 0){
                     Player[position[0]][position[1]] = 3;
+                    System.out.println("\n\n\n\n\nErrrooouuuuu :(");
                 }
             } else{
                 System.out.println("Tiro fora do tabuleiro!!");
@@ -130,12 +182,15 @@ public class BatalhaNaval {
         Random rand = new Random();
         int posX = rand.nextInt(height);
         int posY = rand.nextInt(width);
-        if(player[posX][posY] == 3 && player[posX][posY] == 2)
+        if(player[posX][posY] == 2)
             enemyShot(player);
-        else if (player[posX][posY] == 1)
-            player[posX][posY] = 2;
-        else
+        if(player[posX][posY] == 3)
+            enemyShot(player);
+        if(player[posX][posY] == 0)
             player[posX][posY] = 3;
+        if(player[posX][posY] == 1)
+            player[posX][posY] = 2;
+        
     }
 
     public boolean endGame(int[][] player){
@@ -155,8 +210,40 @@ public class BatalhaNaval {
         showBothBoard();
         playerShot(boardPlayer2);
         enemyShot(boardPlayer1);
-        while(!endGame(boardPlayer1) || !endGame(boardPlayer2))
+        if(!endGame(boardPlayer1) && !endGame(boardPlayer2))
             loop();
+        if(endGame(boardPlayer1) || endGame(boardPlayer2)){
+            showBothBoard();
+            System.out.println("Fim do jogo!!!");
+            if(endGame(boardPlayer1)){
+                System.out.println("\n");
+                String[] perdeu = {
+                    " ****   *****  ****   ****   ****  *****  ***  ",
+                    " *   *  *      *   *  *   * *    *   *   *   * ",
+                    " *   *  ****   ****   ****  *    *   *   ***** ",
+                    " *   *  *      * *    * *   *    *   *   *   * ",
+                    " ****   *****  *  *   *  *   ****    *   *   * "
+                };
+        
+                for (String linha : perdeu) {
+                    System.out.println(linha);
+                }
+            }
+            if(endGame(boardPlayer2)){
+                System.out.println("\n");
+                String[] perdeu = {
+                    " *   * ***** *****  ****  ****  *****  ***  ",
+                    " *   *   *     *   *    * *   *   *   *   * ",
+                    " *   *   *     *   *    * ****    *   ***** ",
+                    "  * *    *     *   *    * * *     *   *   * ",
+                    "   *   *****   *    ****  *  *  ***** *   * "
+                };
+        
+                for (String linha : perdeu) {
+                    System.out.println(linha);
+                }
+            }
+        }
     }
     
     // metodo para imprimir o tabuleiro do player
